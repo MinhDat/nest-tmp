@@ -1,15 +1,19 @@
-import { UnauthorizedException } from '@nestjs/common';
-import { FieldMiddleware, MiddlewareContext, NextFn } from '@nestjs/graphql';
+import {
+  Injectable,
+  Logger,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
 
-export const authMiddleware: FieldMiddleware = async (
-  ctx: MiddlewareContext,
-  next: NextFn,
-) => {
-  const value = await next(); // Get each key of schema
-
-  // TODO: Apply authorization
-  if (ctx.context.req.headers['authorization'] === 'INVALID_TOKEN') {
-    throw new UnauthorizedException();
+@Injectable()
+export class AuthMiddleware implements NestMiddleware {
+  use(req: Request, res: Response, next: NextFunction) {
+    // TODO: Apply authorization
+    if (req.headers['authorization'] === 'INVALID_TOKEN') {
+      Logger.log('authorization', req.headers['authorization']);
+      throw new UnauthorizedException();
+    }
+    next();
   }
-  return value;
-};
+}
