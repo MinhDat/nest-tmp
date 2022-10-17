@@ -5,8 +5,8 @@ export const loggerMiddleware: FieldMiddleware = async (
   ctx: MiddlewareContext,
   next: NextFn,
 ) => {
-  const value = await next(); // Get each key of schema
+  const value = await next(); // Get each value of schema
 
-  Logger.log('value', value);
+  Logger.log(value, 'LoggerValue');
   return value;
 };
